@@ -9,7 +9,7 @@ $config_global = array(
     "nomDeCompteMySQL"  => "root",          // Nom de compte du serveur MySQL.
     "motDePasseMySQL"   => "",              // Mot de passe du serveur MySQL.
     
-    "bddCompte"         => "auh",          // Base de données des comptes.
+    "bddCompte"         => "auth",          // Base de données des comptes.
 );
 ##
 ## == CONFIGURATION DES OPTIONS DU SCRIPT ==
