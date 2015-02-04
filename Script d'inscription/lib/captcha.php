@@ -1,5 +1,5 @@
 <?php
-// On demarre une session.
+// On démarre une session.
 session_start();
 
 header("Content-type: image/jpeg");
@@ -7,7 +7,7 @@ header("Content-type: image/jpeg");
 // La taille de la police.
 $font_size = 20;
 
-// On créer une image avec une certaine taille.
+// On crée une image avec une certaine taille.
 $image = imagecreate(130, 45);
 
 // La couleur de l'image.

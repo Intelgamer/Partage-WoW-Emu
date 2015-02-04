@@ -14,7 +14,7 @@ $config_global = array(
 ##
 ## == CONFIGURATION DES OPTIONS DU SCRIPT ==
 $config_options = array(
-    "modeDebug"         => false,           // Cette option sert à activer le mode débug. Celui-ci feras apparaître toutes les erreurs. (Utile lors de la configuration)
+    "modeDebug"         => false,           // Cette option sert à activer le mode débug. Celui-ci fera apparaître toutes les erreurs. (Utile lors de la configuration)
                                             // true = activé, false = désactivé.
     
     "captcha"           => true,            // Cette option sert à activer le captcha. Celui-ci lutte contre les robots. (conseillé)
