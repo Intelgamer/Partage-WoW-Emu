@@ -104,7 +104,7 @@ session_start();
                             $cgu = "NoCgu";
                         }
                         
-                        // On met en Array les informations.
+                        // On met en Array les informations tout en instanciant la classe Inscription.
                         $compte = new Inscription(
                             [
                             "pseudo" => $_POST["pseudo"],
@@ -117,8 +117,6 @@ session_start();
                             "ip" => $_SERVER["REMOTE_ADDR"],
                             ]
                         );
-                        
-                        echo $compte->captchaSession();
                     }
                 }
             }
