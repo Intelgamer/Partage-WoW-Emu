@@ -44,11 +44,35 @@ class Inscription
         }
     }
     
+    // Fonction qui regarde si les variables ne sont pas vide.
+    public function isValide()
+    {
+        return !(empty($this->_pseudo) || empty($this->_motDePasse) || empty($this->_motDePasse2) || empty($this->_email) || empty($this->_captcha) || empty($this->_captchaSession) || empty($this->_cgu) || empty($this->_ip));
+    }
+    
+    // Fonction qui regarde si les deux mots de passe sont identiques.
+    public function motDePasseValide()
+    {
+        return (bool) ($this->_motDePasse === $this->_motDePasse2);
+    }
+    
+    // Fonction qui regarde si l'adresse email est valide.
+    public function emailValide()
+    {
+        return (bool) (filter_var($this->_email, FILTER_VALIDATE_EMAIL));
+    }
+    
+    // Fonction qui regarde si le captcha est valide.
+    public function captchaValide()
+    {
+        return (bool) ($this->_captcha === $this->_captchaSession);
+    }
+    
     // SETTERS //
     
     public function setPseudo($pseudo)
     {
-        if (!is_string($pseudo) || empty($pseudo))
+        if (!is_string($pseudo) || empty($pseudo) || strlen($pseudo) < 3 || strlen($pseudo) > 13)
         {
             $this->_erreurs[] = self::PSEUDO_INVALIDE;
         }
@@ -60,7 +84,7 @@ class Inscription
     
     public function setMotDePasse($motDePasse)
     {
-        if (!is_string($motDePasse) || empty($motDePasse))
+        if (!is_string($motDePasse) || empty($motDePasse) || strlen($motDePasse) < 3 || strlen($motDePasse) > 13)
         {
             $this->_erreurs[] = self::MOT_DE_PASSE_INVALIDE;
         }
@@ -72,7 +96,7 @@ class Inscription
     
     public function setMotDePasse2($motDePasse2)
     {
-        if (!is_string($motDePasse2) || empty($motDePasse2))
+        if (!is_string($motDePasse2) || empty($motDePasse2) || strlen($motDePasse2) < 3 || strlen($motDePasse2) > 13)
         {
             $this->_erreurs[] = self::MOT_DE_PASSE_2_INVALIDE;
         }
@@ -146,7 +170,7 @@ class Inscription
     
     public function erreurs()
     {
-        return $this->erreurs;
+        return $this->_erreurs;
     }
     
     public function pseudo()

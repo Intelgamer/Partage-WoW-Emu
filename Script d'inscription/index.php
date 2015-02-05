@@ -117,24 +117,104 @@ session_start();
                             "ip" => $_SERVER["REMOTE_ADDR"],
                             ]
                         );
+                        
+                        // Gestion des erreurs lié à l'envoie du formulaire.
+                        foreach ($compte->erreurs() as $erreurs => $value)
+                        {
+                            switch ($value)
+                            {
+                                case Inscription::PSEUDO_INVALIDE:
+                                    $message[] = "<p class=\"erreur\">Le champ Pseudo est invalide et/ou vide.</p>";
+                                    break;
+                                case Inscription::MOT_DE_PASSE_INVALIDE:
+                                    $message[] = "<p class=\"erreur\">Le champ Mot de passe est invalide et/ou vide.</p>";
+                                    break;
+                                case Inscription::MOT_DE_PASSE_2_INVALIDE:
+                                    $message[] = "<p class=\"erreur\">Le champ Mot de passe repeat est invalide et/ou vide.</p>";
+                                    break;
+                                case Inscription::EMAIL_INVALIDE:
+                                    $message[] = "<p class=\"erreur\">Le champ Email est invalide et/ou vide.</p>";
+                                    break;
+                                case Inscription::CAPTCHA_INVALIDE:
+                                    $message[] = "<p class=\"erreur\">Le champ Captcha est invalide et/ou vide.</p>";
+                                    break;
+                                case Inscription::CAPTCHA_SESSION_INVALIDE:
+                                    $message[] = "<p class=\"erreur\">Une erreur est survenue lors de l'envoie du formulaire. Veuillez contacter l'administrateur du site avec ce code erreur: <strong>0001</strong></p>";
+                                    break;
+                                case Inscription::CGU_INVALIDE:
+                                    $message[] = "<p class=\"erreur\">Le champ CGU n'est pas coché. Veuillez lire les Conditions Générales d'Utilisation et les accepters.</p>";
+                                    break;
+                                case Inscription::IP_INVALIDE:
+                                    $message[] = "<p class=\"erreur\">Une erreur est survenue lors de l'envoie du formulaire. Veuillez contacter l'administrateur du site avec ce code erreur: <strong>0002</strong></p>";
+                                    break;
+                            }
+                        }
+                        
+                        // Si les informations sont valide. (Non vide)
+                        if ($compte->isValide())
+                        {
+                            // Si les deux mots de passe sont identiques.
+                            if ($compte->motDePasseValide())
+                            {
+                                // Si l'adresse email est valide. (@ et .xx)
+                                if ($compte->emailValide())
+                                {
+                                    // Si le captcha est valide.
+                                    if ($compte->captchaValide())
+                                    {
+                                        
+                                    }
+                                    // Sinon.
+                                    else
+                                    {
+                                        // On ecrit un message d'erreur et un autre d'information.
+                                        $message[] = "<p class=\"erreur\">Le captcha est invalide.</p>";
+                                        $message[] = "<p class=\"info\">Note: Le captcha est sensible à la casse</p>";
+                                    }
+                                }
+                                // Sinon.
+                                else
+                                {
+                                    // On ecrit un message d'erreur.
+                                    $message[] = "<p class=\"erreur\">L'adresse email est invalide.</p>";
+                                }
+                            }
+                            // Sinon.
+                            else
+                            {
+                                // On ecrit un message d'erreur.
+                                $message[] = "<p class=\"erreur\">Les  Mots de passe sont différents.</p>";
+                            }
+                        }
+                        else { /* On ne met rien ici puisque les erreurs sont déjà communiqué */ }
                     }
+                }
+            }
+            
+            // Si la variable $message existe.
+            if (isset($message))
+            {
+                // Boucle d'affichage des messages.
+                foreach ($message as $message)
+                {
+                    echo $message;
                 }
             }
             ?>
             <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" autocomplete="off" >
                 <?php // On verifie si le serveur MySQL est bien accéssible. ?>
                 <fieldset style="border: none; margin: 0; padding: 0;" <?php if ($db === DBFactory::CONNEXION_FAIL){ echo "disabled=\"disabled\""; } ?>>
-                    <input type="text" name="pseudo" value="" placeholder="Nom de compte" /><br />
-                    <input type="password" name="motDePasse" value="" placeholder="**********" /><br />
-                    <input type="password" name="motDePasse2" value="" placeholder="**********" /><br />
-                    <input type="text" name="email" value="" placeholder="Adresse e-mail" /><br />
+                    <input type="text" name="pseudo" value="<?php if (isset($compte)) { echo $compte->pseudo(); } ?>" placeholder="Nom de compte" /><br />
+                    <input type="password" name="motDePasse" value="<?php if (isset($compte)) { echo $compte->motDePasse(); } ?>" placeholder="**********" /><br />
+                    <input type="password" name="motDePasse2" value="<?php if (isset($compte)) { echo $compte->motDePasse2(); } ?>" placeholder="**********" /><br />
+                    <input type="text" name="email" value="<?php if (isset($compte)) { echo $compte->email(); } ?>" placeholder="Adresse e-mail" /><br />
                     <?php
                     // Si le captcha est activé.
                     if ($config_options["captcha"] === true)
                     {
                         ?>
                         <img src="lib/captcha.php" />
-                        <input type="text" name="captcha" value="" placeholder="Captcha" /><br />
+                        <input type="text" name="captcha" placeholder="Captcha" /><br />
                         <?php
                     }
                     
