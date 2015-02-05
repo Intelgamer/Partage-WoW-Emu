@@ -177,12 +177,16 @@ session_start();
                                         {
                                             // On instancie la classe.
                                             $manager = new InscriptionManagerTrinity($db);
+                                            // On crée une variable pour l'identification du Soap.
+                                            $coreSoap = "TC";
                                         }
                                         // Sinon si l'émulateur utilisé est MaNGOS.
                                         elseif ($config_global["emulateur"] === 2)
                                         {
                                             // On instancie la classe.
                                             $manager = new InscriptionManagerMangos($db);
+                                            // On crée une variable pour l'identification du Soap.
+                                            $coreSoap = "MaNGOS";
                                         }
                                         // Sinon.
                                         else
@@ -206,8 +210,59 @@ session_start();
                                                 // Si l'adresse email existe déjà.
                                                 if (!$manager->existeEmail($compte->email()))
                                                 {
-                                                    // On inscrit le compte dans la base de données.
-                                                    $manager->add($compte, $config_global["extenssion"]);
+                                                    // On tente d'ouvrir une connexion pour savoir si le core est bien en fonctionnement.
+                                                    $fp = @fsockopen("127.0.0.1", "80", $errno, $errstr, 3);
+                                                    // Si c'est le cas.
+                                                    if ($fp)
+                                                    {
+                                                        // On met en Array les informations tout en instanciant la classe Soap.
+                                                        $soap = new Soap(
+                                                            [
+                                                            "ipSoap" => $config_global["hoteCore"],
+                                                            "portSoap" => $config_global["portSoap"],
+                                                            "nomDeCompteSoap" => $config_global["nomDeCompteSoap"],
+                                                            "motDePasseSoap" => $config_global["motDePasseSoap"],
+                                                            "identifiantSoap" => $coreSoap,
+                                                            ]
+                                                        );
+                                                        
+                                                        // On crée deux variable avec les commande pour crée le compte.
+                                                        $commande = ".account create ".$compte->pseudo()." ".$compte->motDePasse();
+                                                        $commande2 = ".account set addon ".$compte->pseudo()." ".$config_global["extenssion"];
+                                                        
+                                                        // On execute les commandes.
+                                                        $soap->commande($commande);
+                                                        $soap->commande($commande2);
+                                                        
+                                                        // Si les commandes n'ont pas fonctionnées.
+                                                        if (in_array(Soap::SOAP_COMMANDE_FAIL, $soap->erreurs()))
+                                                        {
+                                                            // On inscrit le compte dans la base de données par requête SQL.
+                                                            $manager->add($compte, $config_global["extenssion"]);
+                                                        }
+                                                        // Sinon.
+                                                        else
+                                                        {
+                                                            // On regarde si le pseudo existe bien en base de données. (Preuve que la commande SOAP à bien fonctionné)
+                                                            if ($manager->existePseudo($compte->pseudo()))
+                                                            {
+                                                                // Le pseudo existe, alors il est bien dans la base de données.
+                                                            }
+                                                            // Sinon.
+                                                            else
+                                                            {
+                                                                // On inscrit le compte dans la base de données par requête SQL.
+                                                                $manager->add($compte, $config_global["extenssion"]);
+                                                            }
+                                                        }
+                                                    }
+                                                    // Sinon.
+                                                    else
+                                                    {
+                                                        // On inscrit le compte dans la base de données par requête SQL.
+                                                        $manager->add($compte, $config_global["extenssion"]);
+                                                    }
+                                                    
                                                     // On ecrit un message d'information.
                                                     $message[] = "<p class=\"info\">Votre compte à été crée. Vous pouvez désormais vous connecter en jeu.</p>";
                                                 }
