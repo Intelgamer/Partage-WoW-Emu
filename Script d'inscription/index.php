@@ -211,7 +211,7 @@ session_start();
                                                 if (!$manager->existeEmail($compte->email()))
                                                 {
                                                     // On tente d'ouvrir une connexion pour savoir si le core est bien en fonctionnement.
-                                                    $fp = @fsockopen("127.0.0.1", "80", $errno, $errstr, 3);
+                                                    $fp = @fsockopen($config_global["hoteCore"], $config_global["portCore"], $errno, $errstr, 3);
                                                     // Si c'est le cas.
                                                     if ($fp)
                                                     {
