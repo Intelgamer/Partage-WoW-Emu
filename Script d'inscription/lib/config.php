@@ -10,6 +10,11 @@ $config_global = array(
     "motDePasseMySQL"   => "",              // Mot de passe du serveur MySQL.
     
     "bddCompte"         => "auth",          // Base de données des comptes.
+    
+    "emulateur"         => 1,               // Emulateur du serveur.
+                                            // 1 = TrinityCore, 2 = MaNGOS
+    "extenssion"        => 3,               // Extenssion de jeu du serveur.
+                                            // 1 = Vanilla, 2 = BC, 3 = Wotlk, 4 = Cataclysm, 5 = MoP, 6 = WoD
 );
 ##
 ## == CONFIGURATION DES OPTIONS DU SCRIPT ==

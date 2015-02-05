@@ -139,12 +139,22 @@ session_start();
                                     $message[] = "<p class=\"erreur\">Le champ Captcha est invalide et/ou vide.</p>";
                                     break;
                                 case Inscription::CAPTCHA_SESSION_INVALIDE:
+                                    // Si le mode débug est activé.
+                                    if ($config_options["modeDebug"] === true)
+                                    {
+                                        $message[] = "<p class=\"erreur\">La session du captcha n'a pas était fourni.</p>";
+                                    }
                                     $message[] = "<p class=\"erreur\">Une erreur est survenue lors de l'envoie du formulaire. Veuillez contacter l'administrateur du site avec ce code erreur: <strong>0001</strong></p>";
                                     break;
                                 case Inscription::CGU_INVALIDE:
                                     $message[] = "<p class=\"erreur\">Le champ CGU n'est pas coché. Veuillez lire les Conditions Générales d'Utilisation et les accepters.</p>";
                                     break;
                                 case Inscription::IP_INVALIDE:
+                                    // Si le mode débug est activé.
+                                    if ($config_options["modeDebug"] === true)
+                                    {
+                                        $message[] = "<p class=\"erreur\">Aucune adresse IP n'a était fourni, bizarre.</p>";
+                                    }
                                     $message[] = "<p class=\"erreur\">Une erreur est survenue lors de l'envoie du formulaire. Veuillez contacter l'administrateur du site avec ce code erreur: <strong>0002</strong></p>";
                                     break;
                             }
@@ -162,7 +172,59 @@ session_start();
                                     // Si le captcha est valide.
                                     if ($compte->captchaValide())
                                     {
+                                        // Si l'émulateur utilisé est TrinityCore.
+                                        if ($config_global["emulateur"] === 1)
+                                        {
+                                            // On instancie la classe.
+                                            $manager = new InscriptionManagerTrinity($db);
+                                        }
+                                        // Sinon si l'émulateur utilisé est MaNGOS.
+                                        elseif ($config_global["emulateur"] === 2)
+                                        {
+                                            // On instancie la classe.
+                                            $manager = new InscriptionManagerMangos($db);
+                                        }
+                                        // Sinon.
+                                        else
+                                        {
+                                            // Si le mode débug est activé.
+                                            if ($config_options["modeDebug"] === true)
+                                            {
+                                                // On ecrit un message d'erreur.
+                                                $message[] = "<p class=\"erreur\">L'émulateur choisi dans le fichier de config n'est pas pris en compte.</p>";
+                                            }
+                                            // On ecrit un message d'erreur.
+                                            $message[] = "<p class=\"erreur\">Une erreur est survenue lors de l'envoie du formulaire. Veuillez contacter l'administrateur du site avec ce code erreur: <strong>0003</strong></p>";
+                                        }
                                         
+                                        // Si la variable $manager existe.
+                                        if (isset($manager))
+                                        {
+                                            // Si le pseudo existe déjà.
+                                            if (!$manager->existePseudo($compte->pseudo()))
+                                            {
+                                                // Si l'adresse email existe déjà.
+                                                if (!$manager->existeEmail($compte->email()))
+                                                {
+                                                    // On inscrit le compte dans la base de données.
+                                                    $manager->add($compte, $config_global["extenssion"]);
+                                                    // On ecrit un message d'information.
+                                                    $message[] = "<p class=\"info\">Votre compte à été crée. Vous pouvez désormais vous connecter en jeu.</p>";
+                                                }
+                                                // Sinon.
+                                                else
+                                                {
+                                                    // On ecrit un message d'erreur.
+                                                    $message[] = "<p class=\"erreur\">L'adresse email choisi est déjà pris.</p>";
+                                                }
+                                            }
+                                            // Sinon.
+                                            else
+                                            {
+                                                // On ecrit un message d'erreur.
+                                                $message[] = "<p class=\"erreur\">Le pseudo choisi est déjà pris.</p>";
+                                            }
+                                        }
                                     }
                                     // Sinon.
                                     else

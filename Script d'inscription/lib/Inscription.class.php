@@ -68,6 +68,12 @@ class Inscription
         return (bool) ($this->_captcha === $this->_captchaSession);
     }
     
+    // Fonction qui fait chiffre le mot de passe.
+    public function SHA1Compte()
+    {
+        return SHA1(strtoupper($this->_pseudo) . ":" . strtoupper($this->_motDePasse));
+    }
+    
     // SETTERS //
     
     public function setPseudo($pseudo)
