@@ -55,7 +55,6 @@ session_start();
                                     $captcha = $_POST["captcha"];
                                     $captchaSession = NULL;
                                 }
-                                
                             }
                             // Sinon.
                             else
@@ -321,10 +320,10 @@ session_start();
             <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" autocomplete="off" >
                 <?php // On verifie si le serveur MySQL est bien accéssible. ?>
                 <fieldset style="border: none; margin: 0; padding: 0;" <?php if ($db === DBFactory::CONNEXION_FAIL){ echo "disabled=\"disabled\""; } ?>>
-                    <input type="text" name="pseudo" value="<?php if (isset($compte)) { echo $compte->pseudo(); } ?>" placeholder="Nom de compte" /><br />
-                    <input type="password" name="motDePasse" value="<?php if (isset($compte)) { echo $compte->motDePasse(); } ?>" placeholder="**********" /><br />
-                    <input type="password" name="motDePasse2" value="<?php if (isset($compte)) { echo $compte->motDePasse2(); } ?>" placeholder="**********" /><br />
-                    <input type="text" name="email" value="<?php if (isset($compte)) { echo $compte->email(); } ?>" placeholder="Adresse e-mail" /><br />
+                    <input type="text" name="pseudo" value="<?php if (isset($compte)) { echo htmlspecialchars($compte->pseudo()); } ?>" placeholder="Nom de compte" /><br />
+                    <input type="password" name="motDePasse" value="<?php if (isset($compte)) { echo htmlspecialchars($compte->motDePasse()); } ?>" placeholder="**********" /><br />
+                    <input type="password" name="motDePasse2" value="<?php if (isset($compte)) { echo htmlspecialchars($compte->motDePasse2()); } ?>" placeholder="**********" /><br />
+                    <input type="text" name="email" value="<?php if (isset($compte)) { echo htmlspecialchars($compte->email()); } ?>" placeholder="Adresse e-mail" /><br />
                     <?php
                     // Si le captcha est activé.
                     if ($config_options["captcha"] === true)
