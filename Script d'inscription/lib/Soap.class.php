@@ -1,7 +1,7 @@
 <?php
 class Soap
 {
-    public $_ipSoap,
+    protected $_ipSoap,
               $_portSoap,
               $_nomDeCompteSoap,
               $_motDePasseSoap,
