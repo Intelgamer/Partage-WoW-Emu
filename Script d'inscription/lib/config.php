@@ -34,6 +34,9 @@ $config_options = array(
     "cgu"               => false,           // Cette option sert à activer la case des conditions générales d'utilisation. (facultatif)
                                             // true = activé, false = désactivé.
     "lienCgu"           => "#",             // Le lien de votre page CGU.
+    
+    "soap"              => false,           // Cette option sert à activer le SOAP. Celui-ci fait en sorte d'inscrire les membres par le Core en faisans des commandes. (Conseillé)
+                                            // true = activé, false = désactivé.
 );
 ##
 #######################################################################################################################
