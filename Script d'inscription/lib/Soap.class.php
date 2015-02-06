@@ -79,27 +79,27 @@ class Soap
     
     // SETTERS //
     
-    public function setIpSoap($ipSoap)
+    private function setIpSoap($ipSoap)
     {
         $this->_ipSoap = $ipSoap;
     }
     
-    public function setPortSoap($portSoap)
+    private function setPortSoap($portSoap)
     {
         $this->_portSoap = $portSoap;
     }
     
-    public function setNomDeCompteSoap($nomDeCompteSoap)
+    private function setNomDeCompteSoap($nomDeCompteSoap)
     {
         $this->_nomDeCompteSoap = $nomDeCompteSoap;
     }
     
-    public function setMotDePasseSoap($motDePasseSoap)
+    private function setMotDePasseSoap($motDePasseSoap)
     {
         $this->_motDePasseSoap = $motDePasseSoap;
     }
     
-    public function setIdentifiantSoap($identifiantSoap)
+    private function setIdentifiantSoap($identifiantSoap)
     {
         $this->_identifiantSoap = $identifiantSoap;
     }
